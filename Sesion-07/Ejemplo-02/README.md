@@ -1,9 +1,8 @@
-# Ejemplo 2 - Inyección de dependencias
+# Ejemplo 1 - Bases de datos
 
 ## :dart: Objetivos
 
-- Identificar las características del principio de Inversión de control
-- Aplicar el patrón de Inyección de dependencias
+- Crear nuestra base de datos que nos permitirá ejemplificar y aplicar inversión de control
 
 ## ⚙ Requisitos
 
@@ -14,41 +13,58 @@
 
 ## Desarrollo
 
-El patrón de inyección de dependencias consiste en hacer que nuestras piezas de software sean independientes
-comunicándose únicamente a través de un interface. Esto implica muchas modificaciones en el código fuente como el uso de
-implementaciones, la eliminación de la instanciación de objetos mediante la instrucción new o la necesidad de un modo de
-configuración que indique que clases se instanciarán en el caso de solicitarlo.
+En este ejemplo crearemos nuestra conexión a base de datos y la tabla que nos permitirá almacenar las inversiones.
 
-### Mejora tus test de aplicaciones
+El motor de base de datos que utilizaremos e SQLite
 
-La no utilización de la instrucción new, tiene una gran ventaja para el testeo automático de aplicaciones que consiste
-en hacer mocking. Esta técnica consiste en simular piezas de software dependientes y reemplazarlas por otras más simples
-y más rápidas para ejecutar multitud de test.
+SQLite es un sistema de gestión de bases de datos relacional compatible con ACID, contenida en una relativamente
+pequeña (~275 kiB) biblioteca escrita en C. SQLite es un proyecto de dominio público creado por D. Richard Hipp.
 
-Por ejemplo, si un test de unidad tuviese una dependencia a un código para que conecte a la base de datos ese test se
-puede llegar a ejecutar tremendamente lento. Si tenemos una base de datos con mucho volumen o tenemos muchos test a
-ejecutar, puede que llegue a ser inviable realizar test de unidad. Como la inyección de dependencias nos permite
-modificar estos componentes, podemos simular algo más eficiente.
+A diferencia de los sistemas de gestión de bases de datos cliente-servidor, el motor de SQLite no es un proceso
+independiente con el que el programa principal se comunica. En lugar de eso, la biblioteca SQLite se enlaza con el
+programa pasando a ser parte integral del mismo. El programa utiliza la funcionalidad de SQLite a través de llamadas
+simples a subrutinas y funciones. Esto reduce la latencia en el acceso a la base de datos, debido a que las llamadas a
+funciones son más eficientes que la comunicación entre procesos. El conjunto de la base de datos (definiciones, tablas,
+índices, y los propios datos), son guardados como un solo fichero estándar en la máquina host. Este diseño simple se
+logra bloqueando todo el fichero de base de datos al principio de cada transacción.
 
-## Perdida de la orientación de la arquitectura en tiempo de diseño
+En su versión 3, SQLite permite bases de datos de hasta 2 Terabytes de tamaño, y también permite la inclusión de campos
+tipo BLOB
 
-Una gran ventaja de ciertos IDEs en la actualidad es de poder acceder rápidamente al código fuente de las clases y en
-modificar el código mientras estás depurando. Al usar inyección de dependencias se pierden estas características.
+En la raíz de nuestro proyecto crearemos el siguiente archivo:
 
-Por una parte, al trabajar con interfaces y no con la clase directamente, no puedes saber en tiempo de diseño que estás
-ejecutando así que se pierde la visión de todo el código fuente para encontrar el error.
+`database.js`
 
-Es muy importante ser muy ordenado con los nombres y las carpetas donde dejas las clases para conocer que es lo que se
-está ejecutando y encontrarlo navegando por los directorios. Sin inyección de dependencias, poniendo directamente la
-clase en el código y pulsando una tecla de ir al código fuente se abre una pestaña nueva con ese fichero para editarlo.
-Algo muy sencillo, pero que ahorra muchísimo tiempo.
+```javascript
 
-## Estado actual de nuestro software
+const sqlite3 = require('sqlite3').verbose()
 
-En este momento si quisiéramos probar el correcto funcionamiento de nuestros endpoints, tendríamos que crear una base de
-datos solo para pruebas, sin embargo al no tener control sobre la base de datos o la conexión, tendríamos que añadir
-código que verificara si estamos ejecutando nuestra app en modo productivo o de pruebas. Lo cual no es una buena
-práctica.
+const DB_SOURCE = "db.sqlite"
 
-Por lo anterior desacoplaremos la logica contenida en nuestro router (`app.js`) y tomaremos ventaja d ela inyección de
-dependencias para controlar el acceso a la base de datos 
+let db = new sqlite3.Database(DB_SOURCE, (err) => {
+    if (err) {
+        throw err
+    } else {
+        db.run(`CREATE TABLE investment (
+            id  text KEY,
+            )`,
+            (err) => {
+                if (err) {
+                    // Table already created
+                }
+            });
+    }
+});
+
+
+module.exports = db
+
+
+```
+
+Como podemos ver de esta formara estaremos creando la tabla `investment`con un solo campo llamado `id` que será un
+string porque deseamos guardar un uuid.
+
+En nuestro siguiente reto añadiremos los demás campos.
+
+

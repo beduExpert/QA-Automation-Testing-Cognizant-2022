@@ -1,38 +1,3 @@
-# Reto 3 - Pruebas API
-
-## :dart: Objetivos
-
-- Identificar los principios de las pruebas unitarias
-- Realizar pruebas para endpoints
-
-## ⚙ Requisitos
-
-- WebStorm
-- Node.js
-- Jest
-- express
-- sqlite3
-- uuid
-- supertest
-
-
-## Desarrollo
-
-Completa las pruebas para validar los valores de la inversión creada
-
-1. En el archivo `TestAddInvesment.spec.js` añade la siguiente prueba:
-   ```it('returns new created investment', () => {}); ```
-2. Añadir el código necesario para validar que todos los requerimientos de la inversión (fecha fin, id, monto final, etc.) se cumplen
-
-<details>
-  <summary>Solución</summary>
-
-1. Creamos la prueba que nos permite validar que la inversión fue creada con: un id, fecha fin y monto final correctos.
-
-`TestAddInvesment.spec.js`
-
-```javascript
-
 const request = require("supertest");
 const app = require("../../app");
 
@@ -58,11 +23,7 @@ describe('add-investment endpoint', () => {
         expect(response.body.interest).toBe(interest);
         expect(response.body.startingAmount).toBe(startingAmount);
         expect(response.body.endDate).toBe(expectedEndDate);
+        expect(response.body.finalAmount).toBe(expectedFinalAmount);
     });
 })
 
-
-
-```
-
-</details>

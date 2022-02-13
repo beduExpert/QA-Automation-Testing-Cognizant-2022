@@ -29,7 +29,9 @@ Crearemos una carpeta llamada
 
 Dentro de ella inicializaremos un nuevo repositorio
 
-Y ahora inicializaremos un nuevo paquete un nuevo paquete de npm
+`git init`
+
+Y ahora inicializaremos un nuevo paquete de npm
 
 `npm init -y`
 
@@ -59,7 +61,7 @@ Instalamos jest
 **WHEN** se cuenta con el interes, monto y duración
 **THEN** se calcula el monto final
 
-Creemos el caso de uso que cubre nuestro segundo criterio de aceptación
+Creemos el caso de prueba que cubre nuestro segundo criterio de aceptación
 
 `TestInvestment.spec.js`
 

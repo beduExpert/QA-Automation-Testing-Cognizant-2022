@@ -1,70 +1,107 @@
-# Ejemplo 1 - Bases de datos
+# Ejemplo 2 - Creación de API
 
 ## :dart: Objetivos
 
-- Crear nuestra base de datos que nos permitirá ejemplificar y aplicar inversión de control
+- Identificar los principios de las pruebas unitarias
+- Realizar pruebas para endpoints
 
 ## ⚙ Requisitos
 
 - WebStorm
 - Node.js
 - Jest
+- express
 - sqlite3
+- uuid
+- supertest
 
 ## Desarrollo
 
-En este ejemplo crearemos nuestra conexión a base de datos y la tabla que nos permitirá almacenar las inversiones.
+Ahora que tenemos la logíca para añadir inversiones, necesitamos exponerla para que sea accesible desde una interfaz
+gráfica. Para ello crearemos una API haciendo uso de express.
 
-El motor de base de datos que utilizaremos e SQLite
+Instalamos express y sql lite con el comando:
 
-SQLite es un sistema de gestión de bases de datos relacional compatible con ACID, contenida en una relativamente
-pequeña (~275 kiB) biblioteca escrita en C. SQLite es un proyecto de dominio público creado por D. Richard Hipp.
+`npm install express`
+`npm install sqlite3`
+`npm install uuid`
+`npm install supertest`
 
-A diferencia de los sistemas de gestión de bases de datos cliente-servidor, el motor de SQLite no es un proceso
-independiente con el que el programa principal se comunica. En lugar de eso, la biblioteca SQLite se enlaza con el
-programa pasando a ser parte integral del mismo. El programa utiliza la funcionalidad de SQLite a través de llamadas
-simples a subrutinas y funciones. Esto reduce la latencia en el acceso a la base de datos, debido a que las llamadas a
-funciones son más eficientes que la comunicación entre procesos. El conjunto de la base de datos (definiciones, tablas,
-índices, y los propios datos), son guardados como un solo fichero estándar en la máquina host. Este diseño simple se
-logra bloqueando todo el fichero de base de datos al principio de cada transacción.
+Y a continuación creamos nuestro archivo
 
-En su versión 3, SQLite permite bases de datos de hasta 2 Terabytes de tamaño, y también permite la inclusión de campos
-tipo BLOB
-
-En la raíz de nuestro proyecto crearemos el siguiente archivo:
-
-`database.js`
+`app.js`
 
 ```javascript
+const express = require('express')
+const bodyParser = require('body-parser');
+const Investment = require("./entities/Investment");
+const InvestmentRepository = require("./repositories/InvestmentRepository");
 
-const sqlite3 = require('sqlite3').verbose()
+const app = express();
+app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.json())
+app.use(bodyParser.raw())
 
-const DB_SOURCE = "db.sqlite"
+app.post('/add-investment', (req, res) => {
 
-let db = new sqlite3.Database(DB_SOURCE, (err) => {
-    if (err) {
-        throw err
-    } else {
-        db.run(`CREATE TABLE investment (
-            id  text KEY,
-            )`,
-            (err) => {
-                if (err) {
-                    // Table already created
-                }
-            });
-    }
-});
+    const investmentData = {
+        name: req.body.name,
+        description: req.body.description,
+        interest: req.body.interest,
+        startingAmount: req.body.startingAmount,
+        startDate: new Date(req.body.startDate),
+        duration: req.body.duration,
+    };
+    const repository = new InvestmentRepository()
 
+    const investment = Investment.addInvestment(investmentData.name, investmentData.description, investmentData.interest, investmentData.startingAmount, investmentData.startDate, investmentData.duration, repository);
 
-module.exports = db
+    res.send(investment);
+})
+
+module.exports = app;
+
+```
+
+`server.js`
+
+```javascript
+const app = require("./app");
+const port = 3000;
+
+app.listen(port, () => {
+    console.log(`Example app listening at http://localhost:${port}`)
+})
 
 
 ```
 
-Como podemos ver de esta formara estaremos creando la tabla `investment`con un solo campo llamado `id` que será un
-string porque deseamos guardar un uuid.
+`TestAddInvesment.spec.js`
 
-En nuestro siguiente reto añadiremos los demás campos.
+```javascript
+const request = require("supertest");
+const app = require("../../app");
 
 
+describe('add-investment endpoint', () => {
+    it('returns new created investment', async () => {
+        const name = "cetes 28 days";
+        const description = "cetes for 28 days";
+        const interest = 4.5;
+        const startingAmount = 10;
+        const durationDays = 28;
+        const startDate = '2021-01-01';
+
+        const response = await request(app).post("/add-investment").send({
+            name, description, interest, startingAmount, duration: durationDays, startDate
+        });
+
+        expect(response.statusCode).toBe(200);
+        expect(response.body.name).toBe(name);
+    });
+})
+
+
+```
+
+¿Qué otros casos de prueba agregarías?

@@ -1,9 +1,8 @@
-# Reto 2 - Inyección de dependencias
+# Reto 1 - Creación de la base de datos
 
 ## :dart: Objetivos
 
-- Identificar las características del principio de Inversión de control
-- Aplicar el patrón de Inyección de dependencias
+- Crear nuestra base de datos que nos permitirá ejemplificar y aplicar inversión de control
 
 ## ⚙ Requisitos
 
@@ -14,38 +13,54 @@
 
 ## Desarrollo
 
-A continuación nos desacoplaremos del framework(express) y para ello crearemos las siguientes clases/archivos.
+A continuación añade los campos: _name, description, interest, starting_amount, final_amount, start_date y end_date_ a
+la tabla investments.
 
-![img.png](img.png)
+Para revisar los tipos de datos existentes en SQLLite puede revisar el
+siguiente [recurso](https://www.sqlite.org/datatype3.html)
 
-- Crea el archivo add_investment e impleméntalo como una función o una clase
-- Crea las pruebas correspondientes inyectando una implementación del repositorio o una conexión a la BD.
+1. En el archivo `database.js`, dentro de la sentencia `CREATE TABLE` añade los campos necesarios para poder almacenar
+   nuestro modelo de inversiones.
 
 <details>
   <summary>Solución</summary>
 
-1. La función `add_investment` recibe como parámetro una instancia de nuestro repositorio, lo que nos permite poder
-   inyectar esta dependencia
-2. En nuestras pruebas podemos inyectar un mock, stub o una implementación real (con conexión a la base de datos) de nuestro repositorio. 
+1. Añadimos los campos name, description, interest, starting_amount, final_amount, start_date, end_date
+2. Utilizamos los tipos de datos correspondientes
 
-`add_investment.js`
+`database.js`
 
 ```javascript
 
-import Investment from "./investment-be/entities/Investment";
+const sqlite3 = require('sqlite3').verbose()
 
-const AddInvestmentRequest = function (name, description, interest, startingAmount, durationDays, startDate) {
-    this.name = name;
-    this.description = description;
-    this.interest = interest;
-    this.startingAmount = startingAmount;
-    this.durationDays = durationDays;
-    this.startDate = startDate;
-}
+const DB_SOURCE = "db.sqlite"
 
-const add_investment = (addInvestmentRequest, repository) => {
-    return Investment.addInvestment(addInvestmentRequest.name, addInvestmentRequest.description, repository)
-}
+let db = new sqlite3.Database(DB_SOURCE, (err) => {
+    if (err) {
+        throw err
+    } else {
+        db.run(`CREATE TABLE investment (
+            id  text KEY,
+            name text, 
+            description text, 
+            interest real, 
+            starting_amount real, 
+            final_amount real, 
+            start_date number, 
+            end_date text, 
+            )`,
+            (err) => {
+                if (err) {
+                    // Table already created
+                }
+            });
+    }
+});
+
+
+module.exports = db
+
 
 ```
 

@@ -1,67 +1,197 @@
-# Reto 3 - Pruebas API
+# Reto 3 - Persistencia de datos
 
 ## :dart: Objetivos
 
-- Identificar los principios de las pruebas unitarias
-- Realizar pruebas para endpoints
+- Aplicar el patrón AAA (Arrange -  Act - Assert)
+- Aplicar el patrón GWT (Given - When - Then)
 
 ## ⚙ Requisitos
 
 - WebStorm
 - Node.js
 - Jest
-- express
-- sqlite3
-- uuid
-- supertest
-
 
 ## Desarrollo
 
-Completa las pruebas para validar los valores de la inversión creada
+Hasta este punto ya hemos utilizado el patron de inyección de dependencias para desacoplar la capa de persistencia (
+repositorio) con la lógica de negocio (entidad). A continuación validaremos que cuando una inversión es creada, dicha
+inversión se guarda.
 
-1. En el archivo `TestAddInvesment.spec.js` añade la siguiente prueba:
-   ```it('returns new created investment', () => {}); ```
-2. Añadir el código necesario para validar que todos los requerimientos de la inversión (fecha fin, id, monto final, etc.) se cumplen
+
+**GIVEN** un usuario
+**WHEN** ingresa los datos: nombre, descripción, interes, monto, fecha de inicio y duración en días
+**THEN** se crea un registro de esta nueva inversion y se persiste dicho registro
+
+`InvestmentRepositoryContract.js`
+
+```javascript
+
+class InvestmentRepositoryContract {
+    getId() {
+        throw new Error("You have to implement the method getId");
+    }
+
+    save(investment) {
+        throw new Error("You have to implement the method save");
+    }
+}
+
+
+1. En el archivo `TestInvestment.spec.js` añade la siguiente prueba:
+    ```it('saves investment', () => {}); ```
+2. Añadir el código necesario para validar que el meotdo save del repositorio es llamado
+3. En el archivo `Investment.js` implementar la logica necesaria para pasar las pruebas.
+
+
+```
 
 <details>
   <summary>Solución</summary>
 
-1. Creamos la prueba que nos permite validar que la inversión fue creada con: un id, fecha fin y monto final correctos.
+1. Creamos la prueba que nos permite validar que la inversión fue guardada.
 
-`TestAddInvesment.spec.js`
+`TestInvestment.spec.js`
 
 ```javascript
 
-const request = require("supertest");
-const app = require("../../app");
+const Investment = require("../../entities/Investment");
+const InvestmentRepositoryContract = require("../../repositories_contracts/InvestmentRepositoryContract");
 
+class InvestmentRepositoryStub extends InvestmentRepositoryContract {
+    constructor(id) {
+        super();
+        this.id = id;
+        this.saveCalls = [];
+    }
 
-describe('add-investment endpoint', () => {
-    it('returns new created investment', async () => {
-        const name = "cetes 28 days";
-        const description = "cetes for 28 days";
-        const interest = 4.5;
-        const startingAmount = 10;
-        const durationDays = 28;
-        const startDate = '2021-01-01';
-        const expectedEndDate = '2021-01-29T00:00:00.000Z';
-        const expectedFinalAmount = 10.035;
+    getId() {
+        return this.id;
+    }
 
-        const response = await request(app).post("/add-investment").send({
-            name, description, interest, startingAmount, duration: durationDays, startDate
+    save(investment) {
+        this.saveCalls.push(investment);
+    }
+}
+
+describe('Investment', () => {
+    describe('Add new investment', () => {
+        it('calculates end date based on initial day plus duration', () => {
+            const name = "cetes 28 days";
+            const description = "cetes for 28 days";
+            const interest = 4.5;
+            const startingAmount = 10;
+            const durationDays = 28;
+            const startDate = new Date('2021-01-01');
+            const repository = new InvestmentRepositoryStub('123e4567-e89b-12d3-a456-426655440000');
+            const expectedEndDate = new Date('2021-01-29');
+
+            const investment = Investment.addInvestment(name, description, interest, startingAmount, startDate, durationDays, repository);
+
+            expect(investment.endDate).toEqual(expectedEndDate);
         });
 
-        expect(response.statusCode).toBe(200);
-        expect(response.body.name).toBe(name);
-        expect(response.body.description).toBe(description);
-        expect(response.body.interest).toBe(interest);
-        expect(response.body.startingAmount).toBe(startingAmount);
-        expect(response.body.endDate).toBe(expectedEndDate);
-    });
+        it('calculates final amount based on starting amount plus interest generated in the amount of time', () => {
+            const name = "cetes 28 days";
+            const description = "cetes for 28 days";
+            const interest = 4.5;
+            const startingAmount = 10;
+            const durationDays = 28;
+            const startDate = new Date('2021-01-01');
+            const repository = new InvestmentRepositoryStub('123e4567-e89b-12d3-a456-426655440000');
+            const expectedFinalAmount = 10 * (1 + (((interest / 100) / 360) * durationDays));
+
+            const investment = Investment.addInvestment(name, description, interest, startingAmount, startDate, durationDays, repository);
+
+            expect(investment.finalAmount).toEqual(expectedFinalAmount);
+        })
+
+        it('assigns id gotten from repository', () => {
+            const name = "cetes 28 days";
+            const description = "cetes for 28 days";
+            const interest = 4.5;
+            const startingAmount = 10;
+            const durationDays = 28;
+            const startDate = new Date('2021-01-01');
+            const expectedId = '123e4567-e89b-12d3-a456-426655440000';
+            const repository = new InvestmentRepositoryStub(expectedId);
+            const expectedFinalAmount = 10 * (1 + (((interest / 100) / 360) * durationDays));
+
+            const investment = Investment.addInvestment(name, description, interest, startingAmount, startDate, durationDays, repository);
+
+            expect(investment.id).toEqual(expectedId);
+        })
+
+        it('saves new investment', () => {
+            const name = "cetes 28 days";
+            const description = "cetes for 28 days";
+            const interest = 4.5;
+            const startingAmount = 10;
+            const durationDays = 28;
+            const startDate = new Date('2021-01-01');
+            const expectedId = '123e4567-e89b-12d3-a456-426655440000';
+            const repository = new InvestmentRepositoryStub(expectedId);
+            const expectedFinalAmount = 10 * (1 + (((interest / 100) / 360) * durationDays));
+
+            const investment = Investment.addInvestment(name, description, interest, startingAmount, startDate, durationDays, repository);
+
+            expect(repository.saveCalls.length).toEqual(1);
+            expect(repository.saveCalls[0]).toEqual(investment);
+        })
+
+
+    })
+
 })
 
 
+```
+
+1. Nuestro código asigna un id a la inversión utilizando el método `getId()` del repositorio
+
+`Investment.js`
+
+```javascript
+class Investment {
+    id;
+    name;
+    description;
+    interest;
+    startingAmount;
+    finalAmount;
+    startDate;
+    endDate;
+
+    constructor(id, name, description, interest, startingAmount, finalAmount, startDate, endDate) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.interest = interest;
+        this.startingAmount = startingAmount;
+        this.finalAmount = finalAmount;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
+    static addInvestment(name, description, interest, startingAmount, startDate, duration, repository) {
+        const endDate = startDate;
+        endDate.setDate(endDate.getDate() + duration);
+
+        const finalAmount = Investment._calculateFinalAmount(interest, startingAmount, duration);
+
+        const investment = new Investment(repository.getId(), name, description, interest, startingAmount, finalAmount, startDate, endDate)
+        repository.save(investment);
+        return investment;
+    }
+
+    static _calculateFinalAmount(interest, startingAmount, duration) {
+        const bankingYear = 360;
+        const interestAsPercentage = interest / 100;
+        return startingAmount * (1 + (((interestAsPercentage) / bankingYear) * duration));
+    }
+}
+
+
+module.exports = Investment;
 
 ```
 

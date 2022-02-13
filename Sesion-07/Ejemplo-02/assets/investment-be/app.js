@@ -8,8 +8,6 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 app.use(bodyParser.raw())
 
-const db = require("./database.js");
-
 app.post('/add-investment', (req, res) => {
 
     const investmentData = {
@@ -20,7 +18,7 @@ app.post('/add-investment', (req, res) => {
         startDate: new Date(req.body.startDate),
         duration: req.body.duration,
     };
-    const repository = new InvestmentRepository(db);
+    const repository = new InvestmentRepository()
 
     const investment = Investment.addInvestment(investmentData.name, investmentData.description, investmentData.interest, investmentData.startingAmount, investmentData.startDate, investmentData.duration, repository);
 
