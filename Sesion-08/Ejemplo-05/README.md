@@ -47,3 +47,48 @@ El paso de implementación suele implicar la creación de un entorno de implemen
 Incluso los candidatos a la implementación más optimistas rara vez se comprometen con la producción sin reservas. Las implementaciones con frecuencia implican precauciones adicionales y períodos de prueba en vivo, incluidas pruebas beta, pruebas A/B, pruebas azul/verde y otros períodos cruzados para reducir o revertir problemas de software imprevistos y minimizar el impacto comercial.
 
 
+### Mejores practicas
+
+#### Empieza pequeño. 
+
+CI/CD brinda velocidad y agilidad, así que déle tiempo al proceso para que evolucione y permita que los desarrolladores prueben diferentes herramientas y pasos. Una empresa puede comenzar con un pipeline de CI y agregar CD más adelante. Los pequeños proyectos son lugares ideales para probar nuevas herramientas y técnicas que pueden mejorar un pipeline más amplio.
+
+#### Defina el éxito. 
+
+Comprenda los beneficios previstos, como una creación de código más rápida o menores tasas de error/reelaboración, y luego implemente métricas para medir esos criterios. Compare las métricas con el rendimiento previo a la canalización y realice un seguimiento de esas métricas a medida que evoluciona el pipeline. Esto hace que sea más fácil ver el valor de la canalización, detectar problemas a lo largo del tiempo e invertir en formas de construir y mejorar la canalización de CI/CD.
+
+#### Procesos de documentos. 
+
+A menudo pasada por alto y subestimada, la documentación es una parte esencial del proceso de desarrollo. Presenta el proceso y las herramientas para todos los desarrolladores y usuarios comerciales, y explica cómo se relaciona y configura todo. Además, puede ayudar a solucionar problemas. La documentación también contribuye a la postura de cumplimiento y seguridad de una organización, lo que permite a los líderes auditar las actividades.
+
+#### Piensa en las operaciones.
+
+Los paradigmas de desarrollo ágiles, como DevOps y la implementación continua, abarcan funciones tanto de operaciones como de desarrollo. Los desarrolladores deben comprender tanto la implementación como las operaciones, y apropiarse más de la confiabilidad y el rendimiento del software. Los líderes empresariales y de proyectos deben fomentar y reforzar este cambio de actitud.
+
+#### Centrarse en la retroalimentación. 
+
+La retroalimentación dentro del de CI/CD es más efectiva cuando cada paso, y cada participante, trabaja activamente para detectar y abordar problemas para ahorrar tiempo y trabajar de manera eficiente. Esto comienza con la detección de errores en el código fuente y continúa durante todo el proceso de prueba e implementación. Por ejemplo, encuentre y corrija un error de sintaxis en el código fuente en la etapa de compilación, en lugar de perder tiempo y esfuerzo durante la fase de prueba. La categorización y el análisis de errores también pueden ayudar a las empresas a mejorar las habilidades y los procesos de desarrollo.
+
+#### Incluir seguridad en todo. 
+
+Las herramientas de escaneo de seguridad a nivel de código (herramientas SAST y SCA) son útiles para el diagnóstico temprano de vulnerabilidades y errores, pero pueden producir una gran cantidad de falsos positivos. El escaneo de seguridad a nivel de prueba (herramientas DAST e IAST) requiere que el software se construya y se ejecute, lo que significa que los errores se detectan más adelante en el pipeline, donde las correcciones de errores requieren más tiempo y son más costosas. Seleccione las mejores herramientas de análisis de seguridad para las tareas en cuestión y utilícelas para actualizar automáticamente el sistema de seguimiento de errores y generar automáticamente tickets para un rápido examen y corrección.
+
+Además, piense en la seguridad de la canalización en sí: la autorización y la autenticación incorrectas pueden exponer las herramientas y los repositorios a acciones maliciosas. Asegure las herramientas y los repositorios, use registros para rastrear el acceso de los usuarios a ellos y marque actividades inusuales, como descargas a direcciones IP fuera de la LAN corporativa.
+
+#### Adopte pruebas continuas. 
+
+Durante las etapas de fuente y construcción, realice SCA, SAST y otros escaneos de código básicos para estándares de estilo y seguridad. Cuando se complete la construcción, aplique una batería de condiciones de prueba establecidas utilizando herramientas de prueba. Comience con una validación funcional simple y amplíe sistemáticamente las pruebas a una integración más compleja y completa, seguridad profunda (como DAST) y rendimiento. El personal debe construir cuidadosamente pruebas y casos de prueba para validar las características y la funcionalidad de cada nueva compilación a medida que evolucionan las compilaciones, el proyecto e incluso los requisitos del proyecto. Las nuevas funciones que se agregan con frecuencia requieren pruebas frecuentes y casos de prueba.
+
+#### Fomentar la comunicación. 
+
+La integración y la entrega funcionan juntas, pero a menudo se implementan por separado y las manejan diferentes equipos, como codificadores y evaluadores. Una canalización de CI/CD que funcione sin problemas requiere una comunicación y colaboración oportunas y claras entre los diferentes equipos a lo largo de la canalización; de lo contrario, puede estropearse fácilmente con retrasos innecesarios.
+
+#### Evite el desperdicio. 
+
+Crear y mantener un pipeline de CI/CD incurre en varios costos de herramientas, infraestructura y recursos. El uso ineficiente de cualquiera de estos (herramientas subutilizadas o sin usar, infraestructura de TI sobreasignada para pruebas e implementaciones, mala coordinación, evaluación insuficiente de procesos o herramientas) puede retrasar el desarrollo y afectar la productividad del desarrollador. Los pipelines de CI/CD son entidades dinámicas que requieren refinamiento frecuente y capacitación regular de desarrolladores para operar de manera eficiente y confiable.
+
+Esto también significa evitar áreas menos obvias de ineficiencias. No haga 10 compilaciones diferentes en el mismo día si no hay una forma práctica de probar e implementar esas 10 compilaciones en el mismo día. Los equipos y el esfuerzo del proyecto deben reflejar el uso más efectivo del pipeline.
+
+#### Mejorar el ecosistema. 
+
+CI/CD y otros pilenes ágiles son ecosistemas compuestos por herramientas vinculadas con procesos y automatización, con innumerables caminos y pasos alternativos para diferentes productos. Los equipos siempre deben evaluar nuevas herramientas y refinar los procesos para mantener el pipeline general lo más fluido y eficiente posible.
