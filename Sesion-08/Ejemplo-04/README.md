@@ -1,4 +1,4 @@
-# Ejemplo 3 - Beneficios y retos de un pipeline de CI/CD 
+# Ejemplo 4 - Beneficios y retos de un pipeline de CI/CD 
 
 ## :dart: Objetivos
 
@@ -35,4 +35,16 @@ La rápida ciclicidad de CI/CD permite a los desarrolladores experimentar con al
 Los errores pueden tardar semanas o meses en corregirse en el desarrollo de software tradicional, pero el flujo constante de una canalización de CI/CD hace que sea más fácil abordar y corregir errores más rápido y con mayor confianza. El producto es más estable y fiable a lo largo del tiempo.
 
 ### Mejor soporte de operaciones. 
-Los lanzamientos regulares de software mantienen al personal de operaciones en sintonía con los requisitos del software y las necesidades de monitoreo. Los administradores pueden implementar mejor las actualizaciones de software y manejar las reversiones con menos errores de implementación y resolución de problemas innecesaria. Del mismo modo, las tecnologías de automatización de TI pueden ayudar a acelerar las implementaciones y reducir los errores de instalación o configuración.
+Los lanzamientos regulares de software mantienen al personal de operaciones en sintonía con los requisitos del software y las necesidades de monitoreo. Los administradores pueden implementar mejor las actualizaciones de software y manejar los rollbacks con menos errores de implementación y resolución de problemas innecesaria. Del mismo modo, las tecnologías de automatización de TI pueden ayudar a acelerar las implementaciones y reducir los errores de instalación o configuración.
+
+A pesar de estos atractivos beneficios, los líderes empresariales y los equipos de desarrollo deben considerar algunos de los peligros potenciales de los pipelines de CI/CD:
+
+### Dedicación a la automatización. 
+    
+    CI/CD se basa en la consistencia de un conjunto de herramientas establecido y una fuerte automatización para realizar builds de software, probar e implementar cada build. Esto exige una gran inversión intelectual para implementar y administrar la automatización, lo que puede implicar una curva de aprendizaje pronunciada. Los cambios en el proceso de desarrollo o el conjunto de herramientas pueden tener un impacto profundo en el pipeline de CI/CD, por lo que CI/CD a menudo se emplea en entornos de desarrollo maduros y activos.
+    
+### Disciplina y planificación del personal. 
+    Un proceso de CI/CD no puede aportar todo el valor a la empresa si no está generando constantemente nuevas versiones, probando versiones candidatas e implementando candidatas seleccionadas en producción. Esto requiere una planificación cuidadosa y habilidades expertas en gestión de proyectos. Los desarrolladores deben cumplir con las pautas de desarrollo establecidas para garantizar la calidad, el estilo y los estándares arquitectónicos. Mientras tanto, los líderes empresariales y las partes interesadas del proyecto pueden sentirse extremadamente incómodos con las implementaciones automatizadas en paradigmas de implementación continua, y las reuniones para tomar decisiones manuales sobre la implementación pueden estar cargadas de estrés por consecuencias desconocidas o imprevistas. Esto puede causar demoras innecesarias, todo mientras llegan nuevas compilaciones a través del pipeline.
+    
+### Comunicación y colaboración. 
+Ninguna cantidad de automatización y herramientas es un sustituto de una buena comunicación y colaboración entre los desarrolladores y las partes interesadas del proyecto. Estas interacciones facilitan la experimentación rápida y eficiente que hace que CI/CD sea tan poderoso. La automatización y las herramientas son solo medios para ese fin.
