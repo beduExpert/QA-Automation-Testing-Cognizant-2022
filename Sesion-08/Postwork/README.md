@@ -24,6 +24,7 @@ En este postwork desplegarás el FE de la aplicación de inversiones a Heroku y 
 4. Activa los despliegues automáticos y realiza el primer despliegue de forma manual.
 5. Crea un nuevo workflow en tu repositorio que ejecute las pruebas y eslint
 6. Realiza las configuraciones pertinentes para que tu app de FE se conecte con tu app de BE
+7. Genera una coleccion de pruebas en Postman para probar tus distintos endpoints.
 
 
 ## Reflexiones finales 
@@ -60,7 +61,7 @@ Asegúrate que tu postwork contenga todo lo siguiente, ya que esto se evaluará 
 
 
 
-
+-[ ] Generaste una coleccion de pruebas para tu API en Postman
 
 
 
