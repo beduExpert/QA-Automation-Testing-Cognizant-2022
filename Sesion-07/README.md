@@ -14,7 +14,7 @@
 
 
 - [Ejemplo 01:  Creación de API](./Ejemplo-01)
-  - [Reto 01: Pruebas API](./Reto-02)
+  - [Reto 01: Pruebas API](./Reto-01)
 - [Ejemplo 02:  Bases de datos](./Ejemplo-02)
     - [Reto 02: Creación de base de datos](./Reto-02)
 - [Ejemplo 03: Postman: peticiones](./Ejemplo-03)
